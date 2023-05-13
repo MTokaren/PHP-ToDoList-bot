@@ -90,14 +90,9 @@ class Db
         $stmt = $this->pdo->prepare($query);
         $stmt->execute([':chat_id'=>$this->chat_id, ':unixtime1'=>$unixtime1, ':unixtime2'=> $unixtime2]);
         $res = $stmt->fetchAll(PDO::FETCH_OBJ);
-        var_dump($res);
-        if(empty($res)){
-            $message = "No matches found!";
-        } else {
-            foreach ($res as $row){
+        foreach ($res as $row){
                 $message .= 'ID: ' . $row->id . '; Note: ' . $row->note .  '; Remind: '. date('Y-m-d H:i:s', $row->unixtime) ."\n";
             }
-        }
         return $message;
 
     }
