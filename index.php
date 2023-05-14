@@ -14,14 +14,16 @@ $callback_data;
 $command_text;
 $default_state = 'not_listening';
 
-if($deco['message']){
+if($deco['message'])
+{
     $chat_id = $deco['message']['chat']['id'];
     $is_command = $deco['message']['entities']['type'];
     $command_type = 'bot_command';
     $message_text = $deco['message']['text'];
 }
 
-if($deco['callback_query']){
+if($deco['callback_query'])
+{
     $chat_id = $deco['callback_query']['message']['chat']['id'];
     $callback_data = $deco['callback_query']['data'];
 }
@@ -33,13 +35,15 @@ $bot = new Telegram($chat_id);
 $db = new Db($chat_id);
 
 
-if($message_text == '/start'){
-        $bot->sendKeyboard('Welcome to the PHP ToDo list!', Keyboards::START);
-        $bot->setState('not_listening');
-        session_write_close();
-    }
+if($message_text == '/start')
+{
+    $bot->sendKeyboard('Welcome to the PHP ToDo list!', Keyboards::START);
+    $bot->setState('not_listening');
+    session_write_close();
+}
 
-else if($message_text) {
+else if($message_text)
+{
 
     //Set note (d0ne)
     if ($_SESSION['state'] == 'set_note')
@@ -48,7 +52,6 @@ else if($message_text) {
         $bot->sendMessage('Note was saved');
         $_SESSION['state'] = $default_state;
         session_write_close();
-
     }
 
     //Delete note (done)
@@ -61,7 +64,8 @@ else if($message_text) {
         $bot->sendMessage('Note was deleted');
         $_SESSION['state'] = $default_state;
         session_write_close();
-     } else {
+     } else
+     {
         $bot->sendMessage('Invalid data type');
      }   
     }
@@ -72,9 +76,9 @@ else if($message_text) {
         if(is_numeric($message_text))
         {
            $db->deleteReminder($message_text);
-        //   $_SESSION['state'] = $default_state;
            $bot->sendMessage('Reminder was deleted');
-        } else {
+        } else
+        {
            $bot->sendMessage('Invalid data type');
         }  
     }
@@ -84,7 +88,6 @@ else if($message_text) {
     {
      $_SESSION['note_id'] = $message_text;
      $bot->setState('set_time');
-     
     }
     
     
@@ -127,15 +130,18 @@ else if($message_text) {
     }
 }
 
-else if ($callback_data == 'start-show'){
+else if ($callback_data == 'start-show')
+{
    //Show notes
    $notes=$db->getNotes();
    $bot->sendMessage($notes);
 }
-else if ($callback_data == 'show-state') {
-         $bot->sendMessage($_SESSION['state']);
+else if ($callback_data == 'show-state')
+{
+    $bot->sendMessage($_SESSION['state']);
 }
-else if ($callback_data) {
+else if ($callback_data)
+{
     $bot->setState($callback_data);
 }
 
